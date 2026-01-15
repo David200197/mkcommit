@@ -1,0 +1,34 @@
+{
+  "name": "mkcommit",
+  "version": "1.0.0",
+  "description": "CLI para generar mensajes de commit usando Ollama AI",
+  "main": "src/index.js",
+  "bin": {
+    "mkcommit": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "ai",
+    "ollama",
+    "cli",
+    "conventional-commits"
+  ],
+  "author": "Felipe",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "conf": "^10.2.0",
+    "inquirer": "^8.2.6",
+    "node-fetch": "^2.7.0",
+    "ora": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
