@@ -17,19 +17,31 @@ CLI to automatically generate commit messages using **Ollama** with local AI.
 - 🎨 Interactive interface with colors and spinners
 - ⚙️ Persistent model and port configuration
 - 🔄 Option to regenerate, edit, or cancel
+- 🚫 Automatic exclusion of lock files and build artifacts
 
 ## Installation
 
-### From the project directory:
+### From npm (recommended)
 
 ```bash
+npm install -g mkcommin
+```
+
+### From source
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/mkcommit.git
+cd mkcommit
+
+# Install globally
 npm install -g .
 ```
 
-### Or run without installing:
+### Run without installing
 
 ```bash
-node src/index.js
+npx mkcommin
 ```
 
 ## Requirements
@@ -56,7 +68,10 @@ mkcommit
 # View current configuration
 mkcommit --show-config
 
-# Change the model
+# Change the model (interactive selector)
+mkcommit --set-model
+
+# Change the model (direct)
 mkcommit --set-model llama3.2
 
 # Change Ollama port
@@ -69,6 +84,22 @@ mkcommit --list-models
 mkcommit --help
 ```
 
+### File exclusion management
+
+```bash
+# List excluded files
+mkcommit --list-excludes
+
+# Add file to exclusion list
+mkcommit --add-exclude "*.generated.js"
+
+# Remove file from exclusion list
+mkcommit --remove-exclude "package-lock.json"
+
+# Reset exclusion list to defaults
+mkcommit --reset-excludes
+```
+
 ## Workflow
 
 1. Run `mkcommit`
@@ -78,6 +109,8 @@ mkcommit --help
    - ✅ **Accept** and make the commit
    - 🔄 **Regenerate** a new message
    - ✏️ **Edit** the message manually
+   - 🤖 **Change model** and regenerate
+   - 🔌 **Change port** and regenerate
    - ❌ **Cancel** the operation
 
 ## Example
@@ -87,21 +120,36 @@ $ mkcommit
 
 🔍 Analyzing staged changes...
 
-📁 Files in stage:
-   • src/index.js
-   • package.json
+📁 Files to analyze (3):
+   [A] src/auth/AuthService.js
+   [M] src/index.js
+   [M] package.json
 
+🚫 Excluded from analysis (1):
+   [skip] package-lock.json
+
+⠋ Generating message with llama3.2...
 ✔ Message generated
 
 💬 Proposed commit message:
 
-   feat(cli): add support for AI-generated commits
+   feat(auth): add user authentication service
+
+   - implement JWT token generation
+   - add login and registration methods
+   - create password hashing utilities
 
 ? What would you like to do? (Use arrow keys)
 ❯ ✅ Accept and commit
   🔄 Generate another message
   ✏️  Edit message manually
+  ──────────────
+  🤖 Change model
+  🔌 Change port
+  ──────────────
   ❌ Cancel
+
+✔ Commit successful!
 ```
 
 ## Default configuration
@@ -111,27 +159,63 @@ $ mkcommit
 | Port | `11434` |
 | Model | `llama3.2` |
 
+## Default excluded files
+
+The following files are excluded from analysis by default:
+
+- `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`
+- `composer.lock`, `Gemfile.lock`, `poetry.lock`
+- `Cargo.lock`, `pubspec.lock`, `packages.lock.json`
+- Minified files (`*.min.js`, `*.min.css`, `*.bundle.js`)
+- Build directories (`dist/*`, `build/*`, `.next/*`)
+- Source maps (`*.map`)
+- Binary assets (`*.woff`, `*.ttf`, `*.ico`)
+
 ## Conventional Commits
 
 Generated messages follow the format:
 
 ```
 <type>(<scope>): <description>
+
+- detail 1
+- detail 2
 ```
 
 **Valid types:**
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation
-- `style`: Formatting (no code changes)
-- `refactor`: Refactoring
-- `perf`: Performance improvements
-- `test`: Tests
-- `build`: Build system
-- `ci`: Continuous integration
-- `chore`: Maintenance tasks
-- `revert`: Revert changes
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation |
+| `style` | Formatting (no code changes) |
+| `refactor` | Refactoring |
+| `perf` | Performance improvements |
+| `test` | Tests |
+| `build` | Build system |
+| `ci` | Continuous integration |
+| `chore` | Maintenance tasks |
+| `revert` | Revert changes |
+
+## Tips
+
+- Use `--set-model` without arguments to interactively select a model
+- Lock files are automatically excluded to keep commit analysis focused
+- You can regenerate the message as many times as you want before committing
+- The editor option opens your default `$EDITOR` for manual editing
+
+## Updating
+
+```bash
+npm update -g mkcommin
+```
+
+## Uninstalling
+
+```bash
+npm uninstall -g mkcommin
+```
 
 ## License
 
