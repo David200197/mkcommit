@@ -8,131 +8,131 @@
   </picture>
 </p>
 
-CLI para generar mensajes de commit automáticamente usando **Ollama** con IA local.
+CLI to automatically generate commit messages using **Ollama** with local AI.
 
-## Características
+## Features
 
-- ✨ Genera mensajes de commit siguiendo **Conventional Commits**
-- 🤖 Usa modelos de IA locales a través de **Ollama**
-- 🎨 Interfaz interactiva con colores y spinners
-- ⚙️ Configuración persistente de modelo y puerto
-- 🔄 Opción de regenerar, editar o cancelar
+- ✨ Generates commit messages following **Conventional Commits**
+- 🤖 Uses local AI models through **Ollama**
+- 🎨 Interactive interface with colors and spinners
+- ⚙️ Persistent model and port configuration
+- 🔄 Option to regenerate, edit, or cancel
 
-## Instalación
+## Installation
 
-### Desde el directorio del proyecto:
+### From the project directory:
 
 ```bash
 npm install -g .
 ```
 
-### O ejecutar sin instalar:
+### Or run without installing:
 
 ```bash
 node src/index.js
 ```
 
-## Requisitos
+## Requirements
 
 - **Node.js** >= 14.0.0
-- **Ollama** corriendo localmente
-- Un modelo instalado en Ollama (ej: `ollama pull llama3.2`)
+- **Ollama** running locally
+- A model installed in Ollama (e.g.: `ollama pull llama3.2`)
 
-## Uso
+## Usage
 
-### Generar un commit
+### Generate a commit
 
 ```bash
-# Primero, agrega archivos al stage
+# First, add files to stage
 git add .
 
-# Luego ejecuta mkcommit
+# Then run mkcommit
 mkcommit
 ```
 
-### Configuración
+### Configuration
 
 ```bash
-# Ver configuración actual
+# View current configuration
 mkcommit --show-config
 
-# Cambiar el modelo
+# Change the model
 mkcommit --set-model llama3.2
 
-# Cambiar el puerto de Ollama
+# Change Ollama port
 mkcommit --set-port 11434
 
-# Listar modelos disponibles
+# List available models
 mkcommit --list-models
 
-# Ver ayuda
+# View help
 mkcommit --help
 ```
 
-## Flujo de trabajo
+## Workflow
 
-1. Ejecutas `mkcommit`
-2. Se analiza el diff de los archivos en stage
-3. Se envía a Ollama para generar el mensaje
-4. Puedes:
-   - ✅ **Aceptar** y hacer el commit
-   - 🔄 **Regenerar** un nuevo mensaje
-   - ✏️ **Editar** el mensaje manualmente
-   - ❌ **Cancelar** la operación
+1. Run `mkcommit`
+2. The diff of staged files is analyzed
+3. Sent to Ollama to generate the message
+4. You can:
+   - ✅ **Accept** and make the commit
+   - 🔄 **Regenerate** a new message
+   - ✏️ **Edit** the message manually
+   - ❌ **Cancel** the operation
 
-## Ejemplo
+## Example
 
 ```
 $ mkcommit
 
-🔍 Analizando cambios en stage...
+🔍 Analyzing staged changes...
 
-📁 Archivos en stage:
+📁 Files in stage:
    • src/index.js
    • package.json
 
-✔ Mensaje generado
+✔ Message generated
 
-💬 Mensaje de commit propuesto:
+💬 Proposed commit message:
 
-   feat(cli): agregar soporte para generar commits con IA
+   feat(cli): add support for AI-generated commits
 
-? ¿Qué deseas hacer? (Use arrow keys)
-❯ ✅ Aceptar y hacer commit
-  🔄 Generar otro mensaje
-  ✏️  Editar mensaje manualmente
-  ❌ Cancelar
+? What would you like to do? (Use arrow keys)
+❯ ✅ Accept and commit
+  🔄 Generate another message
+  ✏️  Edit message manually
+  ❌ Cancel
 ```
 
-## Configuración por defecto
+## Default configuration
 
-| Opción | Valor por defecto |
-| ------ | ----------------- |
-| Puerto | `11434`           |
-| Modelo | `llama3.2`        |
+| Option | Default value |
+|--------|---------------|
+| Port | `11434` |
+| Model | `llama3.2` |
 
 ## Conventional Commits
 
-Los mensajes generados siguen el formato:
+Generated messages follow the format:
 
 ```
-<tipo>(<scope>): <descripción>
+<type>(<scope>): <description>
 ```
 
-**Tipos válidos:**
+**Valid types:**
 
-- `feat`: Nueva característica
-- `fix`: Corrección de bug
-- `docs`: Documentación
-- `style`: Formato (sin cambios de código)
-- `refactor`: Refactorización
-- `perf`: Mejoras de rendimiento
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation
+- `style`: Formatting (no code changes)
+- `refactor`: Refactoring
+- `perf`: Performance improvements
 - `test`: Tests
-- `build`: Sistema de build
-- `ci`: Integración continua
-- `chore`: Tareas de mantenimiento
-- `revert`: Revertir cambios
+- `build`: Build system
+- `ci`: Continuous integration
+- `chore`: Maintenance tasks
+- `revert`: Revert changes
 
-## Licencia
+## License
 
 MIT
