@@ -1,4 +1,4 @@
-# mkcommit
+# mkcommit - Make Commit Messages Automatically
 
 <p align="center">
   <picture>
