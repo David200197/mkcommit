@@ -18,7 +18,7 @@
     "cli",
     "conventional-commits"
   ],
-  "author": "Felipe",
+  "author": "David200197",
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
