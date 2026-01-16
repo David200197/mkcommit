@@ -1,6 +1,6 @@
 {
   "name": "mkcommit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI para generar mensajes de commit usando Ollama AI",
   "main": "src/index.js",
   "bin": {
