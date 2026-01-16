@@ -361,7 +361,7 @@ program
     .version('1.0.0');
 
 program
-    .option('--set-model <model>', 'Set the Ollama model to use')
+    .option('--set-model [model]', 'Set the Ollama model to use (interactive if omitted)')
     .option('--set-port <port>', 'Set the Ollama port')
     .option('--show-config', 'Show current configuration')
     .option('--list-models', 'List available models in Ollama')
@@ -411,11 +411,17 @@ program
                 console.log(chalk.green(`✅ Port set to: ${port}`));
             }
 
-            if (options.setModel) {
-                await setModel(options.setModel);
+            if (options.setModel !== undefined) {
+                if (options.setModel === true) {
+                    // --set-model sin valor = modo interactivo
+                    await changeModelInteractive();
+                } else {
+                    // --set-model <valor> = establecer directamente
+                    await setModel(options.setModel);
+                }
             }
 
-            if (options.setPort || options.setModel) {
+            if (options.setPort || options.setModel !== undefined) {
                 return;
             }
 
@@ -442,14 +448,16 @@ function listExcludes() {
     console.log(chalk.cyan('\n🚫 Files excluded from analysis:\n'));
     
     if (excludes.length === 0) {
-        console.log(chalk.gray('   (none)'));
+        console.log(chalk.yellow('   (none)'));
     } else {
         excludes.forEach((file, index) => {
-            console.log(chalk.white(`   ${index + 1}. ${chalk.yellow(file)}`));
+            const isDefault = DEFAULT_EXCLUDES.includes(file);
+            const tag = isDefault ? chalk.gray(' (default)') : '';
+            console.log(chalk.white(`   ${index + 1}. ${chalk.yellow(file)}${tag}`));
         });
     }
     
-    console.log(chalk.gray('\n   Fixed patterns (always excluded):'));
+    console.log(chalk.cyan('\n📁 Fixed patterns (always excluded):\n'));
     FIXED_EXCLUDE_PATTERNS.forEach(pattern => {
         console.log(chalk.gray(`   • ${pattern}`));
     });
@@ -475,9 +483,7 @@ function removeExclude(file) {
     
     if (index === -1) {
         console.log(chalk.yellow(`\n⚠️  "${file}" is not in the exclusion list.\n`));
-        console.log(chalk.cyan('Current excluded files:'));
-        excludes.forEach(f => console.log(chalk.white(`   • ${f}`)));
-        console.log();
+        console.log(chalk.white('   Use --list-excludes to see the current list.\n'));
         return;
     }
     
@@ -487,23 +493,12 @@ function removeExclude(file) {
 }
 
 function resetExcludes() {
-    const defaults = [
-        'package-lock.json',
-        'yarn.lock',
-        'pnpm-lock.yaml',
-        'bun.lockb',
-        'composer.lock',
-        'Gemfile.lock',
-        'poetry.lock',
-        'Cargo.lock',
-        'pubspec.lock',
-        'packages.lock.json',
-        'gradle.lockfile',
-        'flake.lock'
-    ];
-    
-    config.set('excludeFiles', defaults);
+    config.set('excludeFiles', [...DEFAULT_EXCLUDES]);
     console.log(chalk.green('\n✅ Exclusion list reset to defaults.\n'));
+}
+
+function getExcludedFiles() {
+    return config.get('excludeFiles');
 }
 
 async function getAvailableModels() {
@@ -659,64 +654,6 @@ async function changePortInteractive() {
 // ============================================
 // EXCLUDED FILES MANAGEMENT
 // ============================================
-
-function listExcludes() {
-    const excludes = config.get('excludeFiles');
-    console.log(chalk.cyan('\n🚫 Files excluded from analysis:\n'));
-    
-    if (excludes.length === 0) {
-        console.log(chalk.yellow('   (none)'));
-    } else {
-        excludes.forEach((file, index) => {
-            const isDefault = DEFAULT_EXCLUDES.includes(file);
-            const tag = isDefault ? chalk.gray(' (default)') : '';
-            console.log(chalk.white(`   ${index + 1}. ${chalk.yellow(file)}${tag}`));
-        });
-    }
-    
-    console.log(chalk.cyan('\n📁 Fixed patterns (always excluded):\n'));
-    FIXED_EXCLUDE_PATTERNS.forEach(pattern => {
-        console.log(chalk.gray(`   • ${pattern}`));
-    });
-    console.log();
-}
-
-function addExclude(file) {
-    const excludes = config.get('excludeFiles');
-    
-    if (excludes.includes(file)) {
-        console.log(chalk.yellow(`\n⚠️  "${file}" is already in the exclusion list.\n`));
-        return;
-    }
-    
-    excludes.push(file);
-    config.set('excludeFiles', excludes);
-    console.log(chalk.green(`\n✅ Added to exclusions: ${chalk.yellow(file)}\n`));
-}
-
-function removeExclude(file) {
-    const excludes = config.get('excludeFiles');
-    const index = excludes.indexOf(file);
-    
-    if (index === -1) {
-        console.log(chalk.yellow(`\n⚠️  "${file}" is not in the exclusion list.\n`));
-        console.log(chalk.white('   Use --list-excludes to see the current list.\n'));
-        return;
-    }
-    
-    excludes.splice(index, 1);
-    config.set('excludeFiles', excludes);
-    console.log(chalk.green(`\n✅ Removed from exclusions: ${chalk.yellow(file)}\n`));
-}
-
-function resetExcludes() {
-    config.set('excludeFiles', [...DEFAULT_EXCLUDES]);
-    console.log(chalk.green('\n✅ Exclusion list reset to defaults.\n'));
-}
-
-function getExcludedFiles() {
-    return config.get('excludeFiles');
-}
 
 function matchesPattern(file, pattern) {
     if (pattern.includes('*')) {
